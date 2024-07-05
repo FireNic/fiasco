@@ -255,7 +255,7 @@ paging_enable(Address pml4)
   /* Enable Physical Address Extension (PAE). */
   set_cr4(get_cr4() | CR4_PAE);
 
-  set_cr4(get_cr4() | 0b0100 0000 0000 0000 0000 0000)
+  set_cr4(get_cr4() | 0b0100 0000 0000 0000 0000 0000);
 
   /* We need to check for the CPU feature otherwise setting the PCID bit may
    * trigger a #GP, see Intel manual. If needed we will complain later. */
