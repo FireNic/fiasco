@@ -82,6 +82,7 @@ private:
   Unsigned32 _ext_features;             // CPUID(1).ECX
   Unsigned32 _features;                 // CPUID(1).EDX
   Unsigned32 _ext_07_ebx;               // CPUID(7).EBX
+  Unsigned32 _ext_07_ecx;               // CPUID(7).ECX
   Unsigned32 _ext_07_edx;               // CPUID(7).EDX
   Unsigned32 _ext_8000_0001_ecx;        // CPUID(8000_0001).ECX
   Unsigned32 _ext_8000_0001_edx;        // CPUID(8000_0001).EDX
@@ -1323,7 +1324,7 @@ Cpu::identify()
     if (max >= 7 && _vendor == Vendor_intel)
       {
         Unsigned32 dummy1, dummy2;
-        cpuid(0x7, 0, &dummy1, &_ext_07_ebx, &dummy2, &_ext_07_edx);
+        cpuid(0x7, 0, &dummy1, &_ext_07_ebx, &_ext_07_ecx, &_ext_07_edx);
         if (has_arch_capabilities())
           _arch_capabilities = rdmsr(MSR_IA32_ARCH_CAPABILITIES);
       }
@@ -1987,6 +1988,9 @@ Cpu::init()
     calibrate_tsc();
 
   Unsigned32 cr4 = get_cr4();
+
+  if(_ext_07_ecx & FEATX_PKU)
+    cr4 |= CR4_PKU;
 
   if (features() & FEAT_FXSR)
     cr4 |= CR4_OSFXSR;

@@ -35,6 +35,7 @@
 #define CR4_PCID        0x00020000      // Enable PCID
 #define CR4_OSXSAVE     0x00040000      // OS Support XSAVE
 #define CR4_SMEP        0x00100000      // Supervisor-Mode Execution Prevention
+#define CR4_PKU         0x00400000      // CR4.PKE Enable PKU/MPK (bit 22)
 
 #define EFLAGS_CF       0x00000001      // Carry Flag
 #define EFLAGS_PF       0x00000004      // Parity Flag
@@ -115,6 +116,8 @@
 #define FEATX_STIBP     0x08000000      // STIBP supported
 #define FEATX_L1D_FLUSH 0x10000000      // L1D_FLUSH supported
 #define FEATX_IA32_ARCH_CAPABILITIES 0x20000000 // IA32_ARCH_CAPABILITIES supported
+
+#define FEATX_PKU       0b1000          // ECX.PKU Protection Keys in User Space or Intel Memory Protection Keys (MPK) (bit 3)
 
 // AMD: CPU Feature Flags, Fn80000001_ECX
 #define FEATA_SVM	0x00000004
