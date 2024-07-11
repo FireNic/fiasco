@@ -106,6 +106,16 @@ Pte_ptr::page_addr() const
 
 PUBLIC inline
 void
+Pte_ptr::set_pku(int pkey_no)
+{
+  auto shifted_key = static_cast<Pte_ptr::Entry>(pkey_no) << Pt_entry::PKU_LOW_BIT;
+  auto valid_key = shifted_key & Pt_entry::PKU_MASK;
+  auto zeroed_pkey_pte = *pte & ~Pt_entry::PKU_MASK;
+  *pte = zeroed_pkey_pte | valid_key;
+}
+
+PUBLIC inline
+void
 Pte_ptr::set_attribs(Page::Attr attr)
 {
   typedef L4_fpage::Rights R;

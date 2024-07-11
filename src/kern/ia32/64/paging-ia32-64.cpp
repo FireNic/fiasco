@@ -24,6 +24,8 @@ public:
     Cpu_global    = 0x00000100LL, ///< pinned in the TLB
     L4_global     = 0x00000200LL, ///< pinned in the TLB
     XD            = 0x8000000000000000ULL,
+    PKU_LOW_BIT   = 59, // lowest bit number of pku in PTE (did not find a better spot for this [yet], bits of 0b111011 are already defined anyways)
+    PKU_MASK     = 0x7800000000000000ULL, // Highest Possible PKU (15 = 0b1111) shifted into bits 62:59
     ATTRIBS_MASK  = 0x8000000000000006ULL
   };
 };
