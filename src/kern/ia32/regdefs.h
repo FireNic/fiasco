@@ -118,6 +118,7 @@
 #define FEATX_IA32_ARCH_CAPABILITIES 0x20000000 // IA32_ARCH_CAPABILITIES supported
 
 #define FEATX_PKU       0b1000          // ECX.PKU Protection Keys in User Space or Intel Memory Protection Keys (MPK) (bit 3)
+#define FEATX_OSPKU     0b10000         // ECX.OSPKU Protection Keys in User Space enabled (bit 4)
 
 // AMD: CPU Feature Flags, Fn80000001_ECX
 #define FEATA_SVM	0x00000004
