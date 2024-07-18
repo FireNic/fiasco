@@ -1323,7 +1323,7 @@ Cpu::identify()
 
     if (max >= 7 && _vendor == Vendor_intel)
       {
-        Unsigned32 dummy1, dummy2;
+        Unsigned32 dummy1;
         cpuid(0x7, 0, &dummy1, &_ext_07_ebx, &_ext_07_ecx, &_ext_07_edx);
         if (has_arch_capabilities())
           _arch_capabilities = rdmsr(MSR_IA32_ARCH_CAPABILITIES);
