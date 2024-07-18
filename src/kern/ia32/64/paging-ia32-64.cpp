@@ -52,3 +52,15 @@ typedef Ptab::Shift<Ptab_traits, Virt_addr::Shift>::List Ptab_traits_vpn;
 typedef Ptab::Page_addr_wrap<Page_number, Virt_addr::Shift> Ptab_va_vpn;
 typedef Pdir_t<Pte_ptr, Ptab_traits_vpn, Ptab_va_vpn> Pdir;
 class Kpdir : public Pdir {};
+
+//---------------------------------------------------------------------------
+IMPLEMENTATION[amd64 && pku]:
+PUBLIC inline
+void
+Pte_ptr::set_pku(int pkey_no)
+{
+  auto shifted_key = static_cast<Pte_ptr::Entry>(pkey_no) << Pt_entry::PKU_LOW_BIT;
+  auto valid_key = shifted_key & Pt_entry::PKU_MASK;
+  auto zeroed_pkey_pte = *pte & ~Pt_entry::PKU_MASK;
+  *pte = zeroed_pkey_pte | valid_key;
+}
