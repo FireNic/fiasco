@@ -1989,8 +1989,7 @@ Cpu::init()
 
   Unsigned32 cr4 = get_cr4();
 
-  if(_ext_07_ecx & FEATX_PKU)
-    cr4 |= CR4_PKU;
+  cr4 |= cr4_pku_value();
 
   if (features() & FEAT_FXSR)
     cr4 |= CR4_OSFXSR;

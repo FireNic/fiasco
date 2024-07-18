@@ -292,3 +292,25 @@ IMPLEMENT_OVERRIDE inline
 bool
 Cpu::is_canonical_address(Address addr)
 { return (addr >= (~0UL << 47)) || (addr <= (~0UL >> 17)); }
+
+//----------------------------------------------------------------------------
+
+IMPLEMENTATION[amd64 && pku]:
+#include "regdefs.h"
+
+PRIVATE inline
+unsigned int Cpu::cr4_pku_value()
+{
+    if(_ext_07_ecx & FEATX_PKU)
+      return CR4_PKU;
+    else
+      panic("PKU was enabled but not available on target machine!");
+    return 0;
+}
+
+//----------------------------------------------------------------------------
+IMPLEMENTATION[ia32 || amd64 && !pku]:
+
+PRIVATE inline
+unsigned int Cpu::cr4_pku_value()
+{ return 0; }
