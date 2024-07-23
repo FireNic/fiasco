@@ -59,6 +59,11 @@ bool
 Pte_ptr::is_valid() const
 { return *pte & Valid; }
 
+PUBLIC inline 
+bool
+Pte_ptr::is_user() const
+{ return *pte & User; }
+
 PUBLIC inline
 bool
 Pte_ptr::is_leaf() const
