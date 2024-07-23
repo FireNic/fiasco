@@ -3,19 +3,25 @@ PRIVATE inline
 bool
 Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
 {
-  (void) tag;
-  (void)utcb;
+  if(EXPECT_FALSE(tag.words() != 3))
+    return false;
+  
+  unsigned int key = utcb->values[1];
+  void *address = 0;
+  __builtin_memcpy(&address, &utcb->values[2], sizeof(void*));
 
-  int key = 0;
-  void *address = 0; // TODO
-  if(Pdir::Depth < 4)
-    return true;
+  auto pte_ptr = Kmem::current_cpu_kdir()
+    ->walk(Virt_addr(address), Pdir::Depth); // wont allocate pte's
 
-  auto pte_ptr = Kmem::current_cpu_kdir()->walk( // wont allocate new PTE's
-                                              Virt_addr(address), Pdir::Depth);
-  assert(pte_ptr.is_valid() && pte_ptr.is_leaf());
-
-  pte_ptr.set_pku(key);
+  bool level_4_or_deeper = Pdir::Depth > 3;
+  bool is_valid = pte_ptr.is_valid();
+  bool is_leaf = pte_ptr.is_leaf();
+  bool is_user = pte_ptr.is_user();
+  if(level_4_or_deeper && is_valid && is_leaf && is_user)
+  {
+    pte_ptr.set_pku(key);
+    Mem_unit::tlb_flush();
+  }
   return true;
 }
 
