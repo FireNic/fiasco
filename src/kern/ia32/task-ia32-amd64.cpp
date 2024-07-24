@@ -10,17 +10,26 @@ Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
   void *address = 0;
   __builtin_memcpy(&address, &utcb->values[2], sizeof(void*));
 
-  auto pte_ptr = Kmem::current_cpu_kdir()
-    ->walk(Virt_addr(address), Pdir::Depth); // wont allocate pte's
+  auto pte_ptr = _dir->walk(Virt_addr(address));
 
-  bool level_4_or_deeper = Pdir::Depth > 3;
+  // i think in this code a level 0 exists, but in documentation we start to count from 1
+  bool level_4_or_deeper = Pdir::Depth > 2; 
   bool is_valid = pte_ptr.is_valid();
   bool is_leaf = pte_ptr.is_leaf();
   bool is_user = pte_ptr.is_user();
+
+  printf("\nAddress copied inside of kernel: %p\n", address);
+  printf("Page is user Level: %d\n", is_user);
+  printf("Page is valid: %d\n", is_valid);
+  printf("Page is leaf: %d\n", is_leaf);
+  printf("PTE is: %lu\n", *(pte_ptr.pte));
+  printf("Depth is: %d\n", Pdir::Depth);
+
   if(level_4_or_deeper && is_valid && is_leaf && is_user)
   {
     pte_ptr.set_pku(key);
     Mem_unit::tlb_flush();
+    printf("PTE is %lu after setting\n\n", *(pte_ptr.pte));
   }
   return true;
 }
