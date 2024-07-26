@@ -106,7 +106,7 @@ Pte_ptr::operator ++ ()
 PUBLIC inline
 Mword
 Pte_ptr::page_addr() const
-{ return cxx::mask_lsb(*pte, Pdir::page_order_for_level(level)) & ~Mword{XD}; }
+{ return cxx::mask_lsb(*pte, Pdir::page_order_for_level(level)) & ~(Mword{XD} | Mword{PKU_MASK}) ; }
 
 PUBLIC inline
 void
