@@ -3,12 +3,13 @@ PRIVATE inline
 bool
 Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
 {
+  unsigned int key = utcb->values[1];
+  long unsigned int address_value = utcb->values[2];
   if(EXPECT_FALSE(tag.words() != 3))
     return false;
   
-  unsigned int key = utcb->values[1];
   void *address = 0;
-  __builtin_memcpy(&address, &utcb->values[2], sizeof(void*));
+  __builtin_memcpy(&address, &address_value, sizeof(void*));
 
   auto pte_ptr = _dir->walk(Virt_addr(address));
 
@@ -18,17 +19,18 @@ Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
   bool is_leaf = pte_ptr.is_leaf();
   bool is_user = pte_ptr.is_user();
 
-  printf("\nAddress copied inside of kernel: %p\n", address);
-  printf("Page is user Level: %d\n", is_user);
-  printf("Page is valid: %d\n", is_valid);
-  printf("Page is leaf: %d\n", is_leaf);
+  // printf("\nAddress copied inside of kernel: %p\n", address);
+  // printf("Page is user Level: %d\n", is_user);
+  // printf("Page is valid: %d\n", is_valid);
+  // printf("Page is leaf: %d\n", is_leaf);
   printf("PTE is: %lu\n", *(pte_ptr.pte));
-  printf("Depth is: %d\n", Pdir::Depth);
+  // printf("Depth is: %d\n", Pdir::Depth);
 
   if(level_4_or_deeper && is_valid && is_leaf && is_user)
   {
     pte_ptr.set_pku(key);
-    Mem_unit::tlb_flush();
+    Mem_unit::tlb_flush(address_value);
+    __asm__ __volatile__ ("invlpg %0" : : "m" (address) : "memory");
     printf("PTE is %lu after setting\n\n", *(pte_ptr.pte));
   }
   return true;
