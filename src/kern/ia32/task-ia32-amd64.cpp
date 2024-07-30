@@ -23,15 +23,14 @@ Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
   // printf("Page is user Level: %d\n", is_user);
   // printf("Page is valid: %d\n", is_valid);
   // printf("Page is leaf: %d\n", is_leaf);
-  printf("PTE is: %lu\n", *(pte_ptr.pte));
+  // printf("PTE is: %lu\n", *(pte_ptr.pte));
   // printf("Depth is: %d\n", Pdir::Depth);
 
   if(level_4_or_deeper && is_valid && is_leaf && is_user)
   {
     pte_ptr.set_pku(key);
     Mem_unit::tlb_flush(address_value);
-    __asm__ __volatile__ ("invlpg %0" : : "m" (address) : "memory");
-    printf("PTE is %lu after setting\n\n", *(pte_ptr.pte));
+    // printf("PTE is %lu after setting\n\n", *(pte_ptr.pte));
   }
   return true;
 }
