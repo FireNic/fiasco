@@ -307,6 +307,12 @@ Mword PF::is_read_error(Mword error)
   return !(error & PF_ERR_WRITE);
 }
 
+PUBLIC static inline NEEDS["regdefs.h"]
+Mword PF::is_pku_error(Mword error)
+{
+  return (error & PF_ERR_PKVIOlATION);
+}
+
 IMPLEMENT inline NEEDS["regdefs.h"]
 Mword PF::addr_to_msgword0(Address pfa, Mword error)
 {
