@@ -366,7 +366,7 @@ thread_page_fault(Address pfa, Mword error_code, Address ip, Mword flags,
 
   // if the page fault is caused by mpk we are not able to resolve it.
   // when we added lazy page allocation we can resolve it (it would be resolved or failed by thread-ipc handle_page_fault_pager())
-  if(error_code & PF::is_pku_error(error_code))
+  if(PF::is_pku_error(error_code))
     return false;
 
   Thread *t = current_thread();

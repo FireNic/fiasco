@@ -3,10 +3,14 @@ PRIVATE inline
 bool
 Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
 {
+  if(EXPECT_FALSE(tag.words() != 3))
+  {
+    tag = commit_result(-L4_err::EInval);
+    return true;
+  }
+
   unsigned int key = utcb->values[1];
   long unsigned int address_value = utcb->values[2];
-  if(EXPECT_FALSE(tag.words() != 3))
-    return false;
   
   void *address = 0;
   __builtin_memcpy(&address, &address_value, sizeof(void*));
@@ -30,7 +34,13 @@ Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
   {
     pte_ptr.set_pku(key);
     Mem_unit::tlb_flush(address_value);
+    tag = commit_result(0);
+    //TODO return start and end of memory region that was protected in utcb[0](start) and utcb[1](end)
     // printf("PTE is %lu after setting\n\n", *(pte_ptr.pte));
+  }
+  else
+  {
+    tag = commit_result(-L4_err::EInval);
   }
   return true;
 }
