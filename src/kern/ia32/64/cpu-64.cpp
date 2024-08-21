@@ -304,7 +304,7 @@ unsigned int Cpu::cr4_pku_value()
     if(_ext_07_ecx & FEATX_PKU)
       return CR4_PKU;
     else
-      panic("PKU was enabled but not available on target machine!");
+      puts("PKU was enabled but not available on target machine!");
     return 0;
 }
 

@@ -3,6 +3,9 @@ PRIVATE inline
 bool
 Task::invoke_pku_set(L4_msg_tag &tag, Utcb *utcb)
 {
+  if(EXPECT_FALSE(!Cpu::cpus.cpu(current_cpu()).has_pku()))
+    return false;
+
   if(EXPECT_FALSE(tag.words() != 3))
   {
     tag = commit_result(-L4_err::EInval);

@@ -2233,6 +2233,11 @@ Cpu::enable_ldt(Address addr, int size)
     }
 }
 
+PUBLIC inline
+bool
+Cpu::has_pku()
+{ return _ext_07_ecx & FEATX_PKU; }
+
 
 PUBLIC static inline
 Unsigned16
